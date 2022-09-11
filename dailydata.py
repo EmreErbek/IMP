@@ -3,7 +3,7 @@ import pandas as pd
 
 #for Turkey .IS on yfinance
 hisse = input("key")
-dailydata = yf.Ticker(hisse+".IS)
+dailydata = yf.Ticker(hisse+".IS")
 history = pd.DataFrame(dailydata.history(period="max"))
 
 with pd.ExcelWriter("{}.xlsx".format(hisse),mode="a") as writer:
