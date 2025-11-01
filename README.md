@@ -1,6 +1,6 @@
 # IMP - Investment Management Panel
 
-A comprehensive stock analysis and portfolio management tool designed for traders in the Borsa Istanbul (BIST) and other markets. IMP provides technical analysis, portfolio tracking, and performance monitoring capabilities through an intuitive command-line interface.
+A comprehensive stock analysis and portfolio management tool designed for traders in the Borsa Istanbul (BIST) and other markets. IMP provides technical analysis, portfolio tracking, and performance monitoring capabilities through both an intuitive **Web Dashboard** and **Command-Line Interface**.
 
 ## Features
 
@@ -44,6 +44,20 @@ A comprehensive stock analysis and portfolio management tool designed for trader
 - Watchlist management
 - Cache system for faster data retrieval
 
+### 🌐 Web Dashboard
+- **Interactive Streamlit Interface**: Modern, user-friendly web interface
+- **Real-time Charts**: Interactive price charts with technical indicators (Plotly)
+- **Portfolio Overview**: Visual representation of your portfolio performance
+- **Multi-page Dashboard**: Dedicated pages for analysis, portfolio, watchlist, alerts
+- **Responsive Design**: Works on desktop and mobile devices
+
+### ⚠️ Alert System
+- **Price Alerts**: Get notified when stocks hit target prices or stop losses
+- **Technical Alerts**: RSI overbought/oversold alerts, MACD crossovers
+- **Email Notifications**: Automatic email alerts for triggered conditions
+- **Watchlist Monitoring**: Automated monitoring of your watchlist
+- **Customizable Alerts**: Set your own thresholds and conditions
+
 ## Installation
 
 ### Prerequisites
@@ -70,7 +84,33 @@ pip install -e .
 
 ## Usage
 
-### Stock Analysis
+### 🌐 Web Dashboard (Recommended)
+
+The easiest way to use IMP is through the web dashboard:
+
+```bash
+# Quick start
+./start_dashboard.sh
+
+# Or manually
+streamlit run src/web/app.py
+```
+
+Then open your browser to **http://localhost:8501**
+
+The web dashboard includes:
+- 🏠 **Home**: Portfolio overview and quick actions
+- 📈 **Stock Analysis**: Interactive charts with technical indicators
+- 💼 **Portfolio**: Manage transactions and view performance
+- 👀 **Watchlist**: Track your favorite stocks
+- ⚠️ **Alerts**: Set up price and technical alerts
+- 📊 **Compare**: Side-by-side stock comparison
+
+### 💻 Command-Line Interface
+
+For advanced users and automation, use the CLI:
+
+#### Stock Analysis
 
 Analyze a single stock with technical indicators:
 
@@ -132,6 +172,74 @@ imp watchlist show
 ```bash
 imp watchlist remove THYAO
 ```
+
+### ⚠️ Alert System
+
+#### Setting Up Email Alerts
+
+1. **Configure email settings** in `config/config.yaml`:
+```yaml
+alerts:
+  enabled: true
+  email:
+    smtp_host: "smtp.gmail.com"
+    smtp_port: 587
+    sender_email: "your-email@gmail.com"
+    sender_password: "your-app-password"  # Use Gmail App Password
+```
+
+2. **For Gmail users**:
+   - Go to Google Account settings
+   - Enable 2-factor authentication
+   - Generate an "App Password" for IMP
+   - Use this app password in the config
+
+#### Using Alerts (Python API)
+
+```python
+from src.alerts.alert_manager import AlertManager
+from src.alerts.email_service import EmailService
+
+# Initialize
+email_service = EmailService(
+    sender_email="your-email@gmail.com",
+    sender_password="your-app-password",
+    enabled=True
+)
+alert_manager = AlertManager(email_service=email_service)
+
+# Check price alert
+alert_manager.check_price_alert(
+    ticker="THYAO",
+    target_price=50.00,
+    stop_loss=40.00,
+    notification_email="recipient@gmail.com"
+)
+
+# Check technical alert (RSI)
+alert_manager.check_technical_alert(
+    ticker="THYAO",
+    indicator="RSI",
+    condition="above",
+    threshold=70,
+    notification_email="recipient@gmail.com"
+)
+
+# Monitor watchlist (runs in background)
+watchlist = db.get_watchlist()
+alert_manager.start_monitoring(
+    watchlist=watchlist,
+    notification_email="recipient@gmail.com"
+)
+```
+
+#### Alert Types
+
+- **Price Target**: Notified when stock reaches target price
+- **Stop Loss**: Notified when stock hits stop loss
+- **RSI Overbought**: Alert when RSI > 70
+- **RSI Oversold**: Alert when RSI < 30
+- **MACD Crossover**: Alert on bullish/bearish crossovers
 
 ## Configuration
 

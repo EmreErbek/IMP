@@ -41,3 +41,19 @@ logging:
 portfolio:
   default_currency: "TRY"
   commission_rate: 0.001  # 0.1% commission
+
+# Alert Settings
+alerts:
+  enabled: false  # Enable alert system
+  check_interval_minutes: 15  # How often to check alerts
+  email:
+    smtp_host: "smtp.gmail.com"
+    smtp_port: 587
+    sender_email: ""  # Your email address
+    sender_password: ""  # Your app password (for Gmail, use App Password, not your regular password)
+
+# Web Dashboard Settings
+web:
+  host: "localhost"
+  port: 8501
+  theme: "light"  # light or dark
